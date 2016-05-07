@@ -1,11 +1,9 @@
-package sample;
+package mole;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebView;
 
 import java.net.URL;
@@ -22,25 +20,26 @@ public class MainWindow implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        searchFromClipboard();
     }
 
     public void searchFromClipboard() {
         Clipboard systemClipboard = Clipboard.getSystemClipboard();
         String string = systemClipboard.getString();
+        if (string == null)
+            string = "";
         searchField.setText(string);
+        search();
+    }
+
+    public void searchString(String str) {
+        searchField.setText(str);
         search();
     }
 
     public void search() {
         String text = searchField.getText();
         webTop.getEngine().load("https://www.google.com/search?q=\"" + text + "\"&hl=en");
-
         webBot.getEngine().load("http://context.reverso.net/translation/english-russian/" + text.replace(" ", "+"));
-    }
-
-    public void searchKeyPressed(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) {
-            search();
-        }
     }
 }

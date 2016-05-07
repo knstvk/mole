@@ -1,14 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile 'com.1stleg:jnativehook:2.0.2'
-}
-
 sourceSets {
     main {
         java { srcDir 'src' }
@@ -20,3 +12,8 @@ sourceSets {
     }
 }
 
+jar {
+    manifest {
+        attributes("Main-Class": "mole.Main")
+    }
+}
