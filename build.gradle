@@ -1,0 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.1stleg:jnativehook:2.0.2'
+}
+
+sourceSets {
+    main {
+        java { srcDir 'src' }
+        resources { srcDir 'src' }
+    }
+    test {
+        java { srcDir 'test' }
+        resources { srcDir 'test' }
+    }
+}
+
