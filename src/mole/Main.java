@@ -2,6 +2,8 @@ package mole;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,6 +23,23 @@ public class Main extends Application {
     private volatile boolean stop;
     private WatchService watchService;
 
+    private double x;
+    private double y;
+    private double height;
+    private double width;
+
+    private class ResizeListener implements ChangeListener<Number> {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            if (stage.getX() >= 0 && stage.getY() >= 0) {
+                x = stage.getX();
+                y = stage.getY();
+                height = stage.getHeight();
+                width = stage.getWidth();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -29,9 +48,10 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
 
-        // https://www.iconfinder.com/icons/678138/find_glass_lens_magnifier_search_icon#size=32
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/images/icon-16.png")));
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/images/icon-32.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/images/icon-64.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/images/icon-128.png")));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main_window.fxml"));
         Parent root = loader.load();
@@ -41,6 +61,12 @@ public class Main extends Application {
         stage.setScene(new Scene(root, 1024, 768));
         restorePosition();
         stage.show();
+
+        ResizeListener resizeListener = new ResizeListener();
+        stage.xProperty().addListener(resizeListener);
+        stage.yProperty().addListener(resizeListener);
+        stage.heightProperty().addListener(resizeListener);
+        stage.widthProperty().addListener(resizeListener);
 
         registerWatchService();
     }
@@ -53,20 +79,24 @@ public class Main extends Application {
     private void savePosition() {
         Preferences userPrefs = Preferences.userNodeForPackage(getClass());
         userPrefs.putBoolean("stage.maximized", stage.isMaximized());
-        userPrefs.putDouble("stage.x", stage.getX());
-        userPrefs.putDouble("stage.y", stage.getY());
-        userPrefs.putDouble("stage.width", stage.getWidth());
-        userPrefs.putDouble("stage.height", stage.getHeight());
+        userPrefs.putDouble("stage.x", x);
+        userPrefs.putDouble("stage.y", y);
+        userPrefs.putDouble("stage.width", width);
+        userPrefs.putDouble("stage.height", height);
     }
 
     private void restorePosition() {
         Preferences userPrefs = Preferences.userNodeForPackage(getClass());
         stage.setMaximized(userPrefs.getBoolean("stage.maximized", false));
         if (!stage.isMaximized()) {
-            stage.setX(userPrefs.getDouble("stage.x", 100));
-            stage.setY(userPrefs.getDouble("stage.y", 100));
-            stage.setWidth(userPrefs.getDouble("stage.width", 1024));
-            stage.setHeight(userPrefs.getDouble("stage.height", 768));
+            x = userPrefs.getDouble("stage.x", 100);
+            stage.setX(x);
+            y = userPrefs.getDouble("stage.y", 100);
+            stage.setY(y);
+            width = userPrefs.getDouble("stage.width", 1024);
+            stage.setWidth(width);
+            height = userPrefs.getDouble("stage.height", 768);
+            stage.setHeight(height);
         }
     }
 
