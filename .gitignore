@@ -1,6 +1,8 @@
 .gradle
-out
-build
+.idea
+/build/
+modules/*/build/
+classes
 *.iml
 *.ipr
 *.iws

@@ -1,4 +1,4 @@
-package mole;
+package mole.app;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,12 +23,16 @@ public class MainWindow implements Initializable {
         searchFromClipboard();
     }
 
-    public void searchFromClipboard() {
+    public void pasteFromClipboard() {
         Clipboard systemClipboard = Clipboard.getSystemClipboard();
         String string = systemClipboard.getString();
         if (string == null)
             string = "";
         searchField.setText(string);
+    }
+
+    public void searchFromClipboard() {
+        pasteFromClipboard();
         search();
     }
 

@@ -1,19 +1,111 @@
-apply plugin: 'java'
-apply plugin: 'idea'
+apply plugin: 'base'
 
-sourceSets {
-    main {
-        java { srcDir 'src' }
-        resources { srcDir 'src' }
-    }
-    test {
-        java { srcDir 'test' }
-        resources { srcDir 'test' }
+def appProject = project(':modules:app')
+def apiProject = project(':modules:api')
+
+configure([appProject, apiProject]) {
+    afterEvaluate {
+        repositories {
+            jcenter()
+        }
+
+        sourceSets {
+            main {
+                java {
+                    srcDir 'src'
+                }
+                resources { 
+                    srcDir 'src' 
+                }
+            }
+            test {
+                java {
+                    srcDir 'test'
+                }
+                resources { 
+                    srcDir 'test' 
+                }
+            }
+        }
+
+        compileJava {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                options.compilerArgs = [
+                    '--module-path', classpath.asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        compileTestJava {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                options.compilerArgs = [
+                    '--module-path', classpath.asPath,
+                    '--add-modules', 'junit',
+                    '--add-reads', "$moduleName=junit",
+                    '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        test {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                jvmArgs = [
+                    '--module-path', classpath.asPath,
+                    '--add-modules', 'ALL-MODULE-PATH',
+                    '--add-reads', "$moduleName=junit",
+                    '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath,
+                ]
+                classpath = files()
+            }
+        }
     }
 }
 
-jar {
-    manifest {
-        attributes("Main-Class": "mole.Main")
+configure(apiProject) {
+    apply plugin: 'java-library'
+
+    dependencies {
+        // implementation 'com.google.guava:guava:22.0'
+
+        testImplementation 'junit:junit:4.12'
     }
+
+    ext.moduleName = 'mole.api'
+}
+
+configure(appProject) {
+    apply plugin: 'java'
+    apply plugin: 'application'
+
+    dependencies {
+        implementation apiProject
+        // implementation 'com.google.guava:guava:22.0'
+
+        testImplementation 'junit:junit:4.12'
+    }
+
+    ext.moduleName = 'mole.app'
+
+    mainClassName = 'mole.app.Main'
+}
+
+def javaHome = System.getenv('JAVA_HOME')
+
+task distr(dependsOn: [':modules:api:assemble', ':modules:app:assemble'], type: Exec) {
+    commandLine "$javaHome/bin/javapackager",
+            '-deploy',
+            '-native', 'image',
+            '-outdir', "$project.buildDir/app",
+            '-outfile', 'Mole.app',
+            '-p', "${appProject.buildDir}/libs/:${apiProject.buildDir}/libs/:$javaHome/jmods",
+            '-m', 'mole.app/mole.app.Main',
+            '-name', '"Mole"',
+            '-title', '"Mole"',
+            '-nosign',
+            '-v'
 }

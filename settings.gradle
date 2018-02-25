@@ -1,0 +1,4 @@
+rootProject.name = 'mole'
+
+include 'modules:app'
+include 'modules:api'
