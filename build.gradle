@@ -106,6 +106,7 @@ task distr(dependsOn: [':modules:api:assemble', ':modules:app:assemble'], type: 
             '-m', 'mole.app/mole.app.Main',
             '-name', '"Mole"',
             '-title', '"Mole"',
+            '-Bicon=etc/icon.icns',
             '-nosign',
             '-v'
 }

@@ -41,10 +41,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
 
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/app/images/icon-16.png")));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/app/images/icon-32.png")));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/app/images/icon-64.png")));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/app/images/icon-128.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/mole/app/images/icon-512.png")));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main_window.fxml"));
         Parent root = loader.load();
