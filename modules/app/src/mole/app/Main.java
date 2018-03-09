@@ -58,6 +58,7 @@ public class Main extends Application {
         });
 
         stage.show();
+        mainWindow.start();
 
         ResizeListener resizeListener = new ResizeListener();
         stage.xProperty().addListener(resizeListener);

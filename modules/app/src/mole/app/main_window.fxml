@@ -14,15 +14,31 @@
    <children>
       <HBox alignment="CENTER_LEFT" layoutX="21.0" layoutY="14.0" spacing="5" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
-            <TextField fx:id="searchField" prefHeight="31.0" prefWidth="485.0" HBox.hgrow="ALWAYS"/>
-            <Button fx:id="searchBtn" mnemonicParsing="false" text="Search" onAction="#search" defaultButton="true"/>
+            <TextField fx:id="searchField" prefHeight="31.0" prefWidth="485.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="searchBtn" defaultButton="true" mnemonicParsing="false" onAction="#search" text="Search" />
          </children>
       </HBox>
-      <SplitPane dividerPositions="0.5" layoutX="14.0" layoutY="58.0" orientation="VERTICAL" prefHeight="507.0" prefWidth="719.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
-         <items>
-            <WebView fx:id="webTop" prefHeight="200.0" prefWidth="200.0" />
-            <WebView fx:id="webBot" prefHeight="200.0" prefWidth="200.0" />
-         </items>
-      </SplitPane>
+      <TabPane fx:id="tabPane" layoutX="14.0" layoutY="60.0" prefHeight="600.0" prefWidth="854.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="60.0">
+        <tabs>
+          <Tab text="Google">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <WebView fx:id="webTop" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Reverso">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <WebView fx:id="webBot" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>
